@@ -5,20 +5,28 @@
 </head>
 <body>
     <h1>{{ title }}</h1>
-
-    <h2>Список экзаменов</h2>
+    <h2>Список опубликованных экзаменов</h2>
     <ul>
         {% for exam in exams %}
-        <li>
-            <strong>Название:</strong> {{ exam.title }}<br>
-            <strong>Дата создания:</strong> {{ exam.created_at|date:"d.m.Y H:i" }}<br>
-            <strong>Дата экзамена:</strong> {{ exam.exam_date|date:"d.m.Y H:i" }}<br>
-            <strong>Пользователи:</strong>
-            {% for user in exam.users.all %}
-                {{ user.username }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}<br>
-            <strong>Статус:</strong> {{ exam.is_public|yesno:"Опубликован,Не опубликован" }}
+        <li style="margin-bottom: 20px;">
+            <p><strong>Название экзамена:</strong> {{ exam.title }}</p>
+            <p><strong>Дата создания:</strong> {{ exam.created_at|date:"d.m.Y H:i" }}</p>
+            <p><strong>Дата проведения экзамена:</strong> {{ exam.exam_date|date:"d.m.Y H:i" }}</p>
+            <p><strong>Пользователи:</strong>
+                {% for user in exam.users.all %}
+                    {{ user.username }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            <p><strong>Статус публикации:</strong> {{ exam.is_public|yesno:"Опубликован,Не опубликован" }}</p>
+            {% if exam.image %}
+            <p><strong>Изображение задания:</strong><br>
+                <img src="{{ exam.image.url }}" alt="Изображение" style="max-width:400px;">
+            </p>
+            {% endif %}
+            <hr>
         </li>
+        {% empty %}
+        <li>Нет опубликованных экзаменов.</li>
         {% endfor %}
     </ul>
 </body>
